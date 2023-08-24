@@ -2,9 +2,12 @@ import { useEffect } from 'react';
 import { useClient } from './client';
 import { useAccount } from "wagmi";
 import { useLoading } from './useLoading';
+import { useError } from './useError';
+
 export const useTokenTransfer = () => {
 
     const { startLoading, stopLoading } = useLoading();
+    const { setError } = useError();
     const {publicClient, walletClient, tokenContract } = useClient();
     const transferToken = async (account:string,from : string,to: string, amount: number): Promise<void> => {
         
@@ -31,6 +34,7 @@ export const useTokenTransfer = () => {
             
         } catch (error) {
             console.log(error);
+            setError();
             stopLoading();
 
         }

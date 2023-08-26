@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMounted } from "../hooks/useMounted";
 import tokenData from '../contract/token.json'; // JSON ファイルのインポート
-import { useBlockNumber } from 'wagmi'
-import { usePublicClient } from 'wagmi'
+import { useBlockNumber,usePublicClient ,useAccount } from 'wagmi'
 import {parseAbiItem} from 'viem'
 import { watchContractEvent } from '@wagmi/core'
 interface Transaction {
@@ -11,9 +10,11 @@ interface Transaction {
     value: bigint;
     blockNumber: bigint;
 }
-const usePastTransactions = (account: string) => {
+const usePastTransactions = () => {
 //   const { publicClient, walletClient } = useClient();
-  
+
+
+  const account = useAccount();
   const mounted = useMounted();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const publicClient = usePublicClient();
@@ -25,18 +26,14 @@ const usePastTransactions = (account: string) => {
         try {
         const blockNumber = data;
         console.log(publicClient);
-        console.log(account)
-
-        if(account === undefined){
-            return;
-        }
+        console.log(account);
 
 
         const logs_from = await publicClient.getLogs({
             address: tokenData.address as `0x${string}`,
             event: parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 value)"),
             args: {
-                from: account as `0x${string}`,
+                from: account.address as `0x${string}`,
                 to: null,
             },
             fromBlock:BigInt(0),
@@ -48,7 +45,7 @@ const usePastTransactions = (account: string) => {
             event: parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 value)"),
             args: {
                 from: null,
-                to: account as `0x${string}`
+                to: account.address as `0x${string}`
             },
             fromBlock: BigInt(0),
             toBlock: blockNumber,
@@ -94,7 +91,7 @@ const usePastTransactions = (account: string) => {
     fetchPastTransactions();
     
 
-  }, [account, mounted]);
+  }, [account.address, mounted]);
 
   console.log(transactions);
   return transactions;

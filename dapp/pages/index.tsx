@@ -55,6 +55,19 @@ const IndexPage: NextPage = () => {
   if (mounted) {
     return (
       <div>
+        {isLoading && (
+          <Alert status='error'>
+            <Spinner style={{ marginRight: "10px" }} />
+            <AlertTitle>Pending now</AlertTitle>
+          </Alert>
+        )}
+
+        {isError && (
+          <Alert status='error'>
+            <AlertTitle>Reject</AlertTitle>
+            <Button onClick={closeAlert}><ImCross size={12} /></Button>
+          </Alert>
+        )}
         <div>アカウント: {account.address}</div>
         <div>残高: {balance}</div>
         <div>送金</div>
@@ -70,19 +83,7 @@ const IndexPage: NextPage = () => {
           <Button onClick={handleTransfer}>送金</Button>
         </Flex>
         <PastTransactions />
-        {isLoading && (
-          <Alert status='error'>
-            <Spinner style={{ marginRight: "10px" }} />
-            <AlertTitle>Pending now</AlertTitle>
-          </Alert>
-        )}
 
-        {isError && (
-          <Alert status='error'>
-            <AlertTitle>Reject</AlertTitle>
-            <Button onClick={closeAlert}><ImCross size={12} /></Button>
-          </Alert>
-        )}
       </div>
     );
   }

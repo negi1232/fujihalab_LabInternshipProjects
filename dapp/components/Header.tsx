@@ -1,17 +1,12 @@
 import {
   Heading,
   Box,
-  Link,
   Flex,
   Spacer,
-  Button,
-  Stack,
   useColorMode
 } from '@chakra-ui/react'
 import { FC } from 'react'
-import { default as NextLink } from 'next/link'
 import { useRouter } from 'next/router'
-import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { Connect } from './Connect'
 
 interface Props {

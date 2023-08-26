@@ -1,12 +1,10 @@
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTokenBalance } from "../hooks/useTokenBalance";
 import { useTokenTransfer } from "../hooks/useTokenTransfer";
 import { useAccount } from "wagmi";
 import { Button } from "@chakra-ui/react";
 import { ImCross } from 'react-icons/im';
-
-
 import {
   Spinner,
   Flex,
@@ -20,31 +18,30 @@ import {
 import { useMounted } from "../hooks/useMounted";
 import { useLoading } from "../hooks/useLoading";
 import { useError } from "../hooks/useError";
-
 import { PastTransactions } from "../components/PastTransactions";
 import {
   Alert,
-  AlertIcon,
   AlertTitle,
-  AlertDescription,
 } from '@chakra-ui/react'
+
 const IndexPage: NextPage = () => {
   const account = useAccount();
-  const balance = useTokenBalance(account.address);
+  const balance = useTokenBalance(account.address as string);
   const mounted = useMounted();
   const { isLoading } = useLoading();
-  const { isError, setError, unsetError } = useError();
+  const { isError, unsetError } = useError();
   const [amount, setAmount] = useState<number>(0);
   const [to, setTo] = useState<string>("");
+
   const { transferToken } = useTokenTransfer();
 
-
   const handleTransfer = () => {
-    const from = account.address; // 送信元アドレスを指定
-    transferToken(account.address, from, to, amount * 10 ** 18);
-  }
+    const from = account.address;
+    transferToken(account.address as string, from as string, to, amount * 10 ** 18);
+  };
+
   const handleAmountChange = (valueAsString: string, valueAsNumber: number) => {
-    setAmount(valueAsNumber); // 値の変更を保存
+    setAmount(valueAsNumber);
   };
 
   const handleToChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,8 +49,6 @@ const IndexPage: NextPage = () => {
   };
 
   const closeAlert = () => {
-
-    console.log("closeAlert");
     unsetError();
   };
 
@@ -75,32 +70,20 @@ const IndexPage: NextPage = () => {
           <Button onClick={handleTransfer}>送金</Button>
         </Flex>
         <PastTransactions />
-        {isLoading ? (
-          <>
-
-            <Alert status='error'>
-              <Spinner style={{ marginRight: "10px" }} />
-              <AlertTitle>Pending now</AlertTitle>
-
-            </Alert>
-          </>
-        ) : (
-          <></>
+        {isLoading && (
+          <Alert status='error'>
+            <Spinner style={{ marginRight: "10px" }} />
+            <AlertTitle>Pending now</AlertTitle>
+          </Alert>
         )}
 
-        {isError ? (
-          <>
-
-            <Alert status='error'>
-              <AlertTitle>Reject</AlertTitle>
-              <Button onClick={closeAlert}><ImCross size={12} /></Button>
-            </Alert>
-          </>
-        ) : (
-          <></>
+        {isError && (
+          <Alert status='error'>
+            <AlertTitle>Reject</AlertTitle>
+            <Button onClick={closeAlert}><ImCross size={12} /></Button>
+          </Alert>
         )}
-
-      </div >
+      </div>
     );
   }
   return <div>loading...</div>

@@ -4,7 +4,6 @@ import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
@@ -14,16 +13,12 @@ import {
 
 import { Box, Heading } from '@chakra-ui/react';
 
-interface Transaction {
-    from: string;
-    to: string;
-    value: bigint;
-    blockNumber: bigint;
-}
 export function PastTransactions() {
 
     const account = useAccount();
-    const pastTransactions = usePastTransactions(account.address);
+    console.log(account.address);
+    const pastTransactions = usePastTransactions(account.address as string); // account.address が undefined の場合も考慮
+
     console.log(pastTransactions);
     return (
         <Box>

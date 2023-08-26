@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useClient } from './client';
-import {parseAbiItem} from 'viem';
 import { useMounted } from "../hooks/useMounted";
-
+import tokenData from '../contract/token.json'; // JSON ファイルのインポート
+import { useBlockNumber } from 'wagmi'
+import { usePublicClient } from 'wagmi'
+import {parseAbiItem} from 'viem'
+import { watchContractEvent } from '@wagmi/core'
 interface Transaction {
     from: string;
     to: string;
@@ -10,16 +12,28 @@ interface Transaction {
     blockNumber: bigint;
 }
 const usePastTransactions = (account: string) => {
-  const { publicClient, walletClient, tokenContract } = useClient();
+//   const { publicClient, walletClient } = useClient();
+  
   const mounted = useMounted();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const publicClient = usePublicClient();
 
+  const { data, isError, isLoading } = useBlockNumber()
   useEffect(() => {
+    
     const fetchPastTransactions = async () => {
-        const blockNumber = await publicClient.getBlockNumber();
+        try {
+        const blockNumber = data;
+        console.log(publicClient);
+        console.log(account)
+
+        if(account === undefined){
+            return;
+        }
+
 
         const logs_from = await publicClient.getLogs({
-            address: tokenContract.address as `0x${string}`,
+            address: tokenData.address as `0x${string}`,
             event: parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 value)"),
             args: {
                 from: account as `0x${string}`,
@@ -30,7 +44,7 @@ const usePastTransactions = (account: string) => {
         });
 
         const logs_to = await publicClient.getLogs({
-            address: tokenContract.address as `0x${string}`,
+            address: tokenData.address as `0x${string}`,
             event: parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 value)"),
             args: {
                 from: null,
@@ -39,8 +53,17 @@ const usePastTransactions = (account: string) => {
             fromBlock: BigInt(0),
             toBlock: blockNumber,
         });
-
-        //ブロックナンバー順に組み合わせ
+        console.log(await publicClient.getBlock() );
+        const unwatch = watchContractEvent(
+        {
+            address: tokenData.address as `0x${string}`,
+            abi: tokenData.abi,
+            eventName: 'Transfer',
+            
+        },
+        (log:any) => console.log(log),
+        )
+                //ブロックナンバー順に組み合わせ
 
         let logs = logs_from.concat(logs_to);
 
@@ -55,17 +78,21 @@ const usePastTransactions = (account: string) => {
         console.log(logs);
         setTransactions(logs.map((log) => {
             return {
-                from: log.args.from,
-                to: log.args.to,
-                value: log.args.value,
-                blockNumber: log.blockNumber,
+                from: log.args.from as string,
+                to: log.args.to as string,
+                value: log.args.value as bigint,
+                blockNumber: log.blockNumber as bigint,
             };
         }));
+        } catch (error) {
+        console.log(error);
+            setTransactions([]);
+        }
+
     };
 
-    if (mounted){
-        fetchPastTransactions();
-    }
+    fetchPastTransactions();
+    
 
   }, [account, mounted]);
 

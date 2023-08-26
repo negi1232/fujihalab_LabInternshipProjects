@@ -23,6 +23,7 @@ import {
   Alert,
   AlertTitle,
 } from '@chakra-ui/react'
+import Link from 'next/link'
 
 const IndexPage: NextPage = () => {
   const account = useAccount();

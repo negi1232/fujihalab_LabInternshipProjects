@@ -2,13 +2,10 @@ import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "../components/Layout";
 import { WagmiConfig, createConfig, configureChains, mainnet, } from 'wagmi'
-import { polygonMumbai } from 'wagmi/chains'
-import { createPublicClient, http } from 'viem'
 import { publicProvider } from "wagmi/providers/public";
-import { useEffect } from "react";
 import { fujihalab } from "../contract/network";
 import "@rainbow-me/rainbowkit/styles.css";
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
 import {
   connectorsForWallets,
@@ -20,11 +17,6 @@ import {
   metaMaskWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
-
-// const { chains, publicClient, webSocketPublicClient } = configureChains(
-//   [fujihalab],
-//   [publicProvider()],
-// )
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [fujihalab],
   [
@@ -37,7 +29,7 @@ const connectors = connectorsForWallets([
   {
     groupName: "Recommended",
     wallets: [
-      metaMaskWallet({ chains }),
+      metaMaskWallet({ chains, projectId: "" }),
     ],
   },
 ]);
@@ -48,17 +40,22 @@ const config = createConfig({
   publicClient,
   connectors,
   webSocketPublicClient,
-
-
 })
+
+const chakraConfig: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: true,
+};
+
+const theme = extendTheme({ chakraConfig });
 
 
 function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <WagmiConfig config={config} >
-      <RainbowKitProvider theme={darkTheme()} chains={chains}>
-        <ChakraProvider>
+      <RainbowKitProvider chains={chains}>
+        <ChakraProvider theme={theme}>
           <Layout >
             <Component {...pageProps} />
           </Layout>

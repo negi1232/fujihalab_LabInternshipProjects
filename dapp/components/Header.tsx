@@ -1,47 +1,4 @@
-// import {
-//   Heading,
-//   Box,
-//   Flex,
-//   Spacer,
-//   useColorMode
-// } from '@chakra-ui/react'
-// import { FC } from 'react'
-// import { useRouter } from 'next/router'
-// import { Connect } from './Connect'
-// import Link from 'next/link'
 
-// interface Props {
-//   isExternal?: boolean
-// }
-
-// const Header: FC<Props> = ({ isExternal = false }) => {
-//   const router = useRouter()
-//   const { colorMode, toggleColorMode } = useColorMode()
-
-//   return (
-//     <Box p="4">
-//       <Flex alignItems="center">
-//         <Box p={2}>
-//           <Heading size={{ base: 'xs', sm: 'md' }}>
-//             <a> Fujihalab internship</a>
-//           </Heading>
-//         </Box>
-//         <Link href="/" passHref>
-//           Wallet
-//         </Link>
-//         <Spacer />
-//         <Link href="/about" passHref>
-//           etc
-//         </Link>
-//         <Spacer />
-//         <Connect />
-//       </Flex>
-//     </Box>
-//   )
-// }
-
-// export default Header;
-'use client'
 import { Connect } from './Connect'
 import {
   Box,

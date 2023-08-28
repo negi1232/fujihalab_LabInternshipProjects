@@ -9,26 +9,32 @@
     "deploy": "yarn build && gh-pages -d out"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
-    "@chakra-ui/react": "^2.8.0",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@rainbow-me/rainbowkit": "1.0.1",
-    "framer-motion": "^10.16.1",
+    "@chakra-ui/icons": "2.1.0",
+    "@chakra-ui/react": "2.8.0",
+    "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
+    "@rainbow-me/rainbowkit": "1.0.9",
+    "framer-motion": "10.16.1",
+    "fs": "0.0.1-security",
     "next": "latest",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.10.1",
-    "viem": "^0.3.50",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "4.10.1",
+    "viem": "0.3.50",
     "wagmi": "1.0.1",
-    "zustand": "^4.4.1"
+    "zustand": "4.4.1"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
-    "gh-pages": "^6.0.0",
     "prettier": "3.0.2",
     "typescript": "^5.0.4"
-  }
+  },
+  "name": "dapp",
+  "description": "This is a really simple project that shows the usage of Next.js with TypeScript.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

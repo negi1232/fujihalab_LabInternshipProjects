@@ -52,6 +52,7 @@ const theme = extendTheme({ chakraConfig });
 
 function MyApp({ Component, pageProps }: AppProps) {
 
+
   return (
     <WagmiConfig config={config} >
       <RainbowKitProvider chains={chains}>

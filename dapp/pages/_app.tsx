@@ -6,7 +6,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { fujihalab } from "../contract/network";
 import "@rainbow-me/rainbowkit/styles.css";
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
-
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import {
   connectorsForWallets,
   RainbowKitProvider,
@@ -38,7 +38,10 @@ const connectors = connectorsForWallets([
 const config = createConfig({
   autoConnect: true,
   publicClient,
-  connectors,
+  // connectors,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+  ],
   webSocketPublicClient,
 })
 

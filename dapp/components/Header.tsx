@@ -82,6 +82,18 @@ export default function Header() {
                   textDecoration: 'none',
                   bg: useColorModeValue('gray.200', 'gray.700'),
                 }}
+                href={"/game"}>
+                game
+              </Box>
+              <Box
+                as="a"
+                px={2}
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: useColorModeValue('gray.200', 'gray.700'),
+                }}
                 href={"/about"}>
                 about
               </Box>
@@ -106,6 +118,18 @@ export default function Header() {
                 }}
                 href={"/"}>
                 Wallet
+              </Box>
+              <Box
+                as="a"
+                px={2}
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: useColorModeValue('gray.200', 'gray.700'),
+                }}
+                href={"/game"}>
+                game
               </Box>
               <Box
                 as="a"

@@ -17,7 +17,7 @@ export function Connect() {
 
   return (
     <div>
-      <button onClick={() => { connect({ connector: connectors[0] }) }}>Metamask</button>
+      <button onClick={() => { connect({ connector: connectors[0] }) }}>aaMetamask</button>
     </div>
   )
 }

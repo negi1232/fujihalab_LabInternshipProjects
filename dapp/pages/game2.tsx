@@ -1,76 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import './styles.css';
+import { useState, useEffect } from 'react';
 
-type CellValue = 'mine' | number;
-type CellState = 'hidden' | 'visible' | 'flag';
+const wordsToType = [
+  "apple",
+  "banana",
+  "cherry",
+  "date",
+  "elderberry",
+  "fig",
+  "grape",
+  "honeydew",
+  "kiwi",
+  "lemon",
+  "Minecraft",
+  "Valorant",
+  "Apex",
+  "Terraria",
+  "Umamusume"
 
-interface Cell {
-  value: CellValue;
-  state: CellState;
-}
+  // ... add more words ...
+];
 
-const numRows = 10;
-const numCols = 10;
-const numMines = 20;
-
-function generateEmptyBoard(): Cell[][] {
-  const board: Cell[][] = [];
-  for (let i = 0; i < numRows; i++) {
-    const row: Cell[] = [];
-    for (let j = 0; j < numCols; j++) {
-      row.push({ value: 0, state: 'hidden' });
-    }
-    board.push(row);
-  }
-  return board;
-}
-
-function generateMines(board: Cell[][], numMines: number): void {
-  let minesPlaced = 0;
-  while (minesPlaced < numMines) {
-    const row = Math.floor(Math.random() * numRows);
-    const col = Math.floor(Math.random() * numCols);
-    if (board[row][col].value !== 'mine') {
-      board[row][col].value = 'mine';
-      minesPlaced++;
+const getRandomWords = (count) => {
+  const randomIndices = [];
+  while (randomIndices.length < count) {
+    const randomIndex = Math.floor(Math.random() * wordsToType.length);
+    if (!randomIndices.includes(randomIndex)) {
+      randomIndices.push(randomIndex);
     }
   }
-}
+  return randomIndices.map((index) => wordsToType[index]);
+};
 
-// ... 他の関数（countAdjacentMinesやrevealCellなど）をここに実装
+const Game2Page: React.FC = () => {
+  const [wordsToTypeRandomized, setWordsToTypeRandomized] = useState<string[]>([]);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [enteredText, setEnteredText] = useState("");
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [gameCompleted, setGameCompleted] = useState(false);
+  const [clearTime, setClearTime] = useState<number | null>(null);
 
-const Game: React.FC = () => {
-  const [board, setBoard] = useState<Cell[][]>(generateEmptyBoard());
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputText = event.target.value;
+    setEnteredText(inputText);
+
+    if (inputText === wordsToTypeRandomized[currentWordIndex]) {
+      if (currentWordIndex < wordsToTypeRandomized.length - 1) {
+        setCurrentWordIndex(currentWordIndex + 1);
+        setEnteredText(""); // Clear the input field
+      } else {
+        const endTime = new Date().getTime();
+        const elapsedTime = (endTime - startTime!) / 1000; // in seconds
+        const wordsPerMinute = (wordsToTypeRandomized.length / elapsedTime) * 60;
+
+        setClearTime(elapsedTime);
+        setGameCompleted(true); // Set game completion state
+      }
+    }
+  };
+
+  const handleFocus = () => {
+    if (currentWordIndex === 0) {
+      setStartTime(new Date().getTime());
+    }
+  };
+
+  const handleRestart = () => {
+    setGameCompleted(false);
+    setCurrentWordIndex(0);
+    setEnteredText("");
+    setClearTime(null);
+    setWordsToTypeRandomized(getRandomWords(10)); // Randomize words again
+  };
 
   useEffect(() => {
-    const newBoard = generateEmptyBoard();
-    generateMines(newBoard, numMines);
-    setBoard(newBoard);
+    setWordsToTypeRandomized(getRandomWords(10)); // Initialize with 10 random words
+    setCurrentWordIndex(0);
+    setEnteredText("");
+    setClearTime(null);
   }, []);
 
-  // ... handleCellClickとUIのJSXをここに実装
-
   return (
-    <div className="game">
-      <div className="board">
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className="row">
-            {row.map((cell, colIndex) => (
-             <div
-             key={colIndex}
-             className={cell ${cell.state}}
-             onClick={() => handleCellClick(rowIndex, colIndex)}
-             onContextMenu={(e) => handleContextMenu(e, rowIndex, colIndex)}
-           >
-             {cell.state === 'visible' && cell.value !== 0 && cell.value !== 'mine' ? cell.value : ''}
-             {cell.state === 'flag' ? '🚩' : ''}
-           </div>
-            ))}
-            </div>
-        ))}
+    <div className="container">
+      <h1>Typing Game</h1>
+      {gameCompleted ? (
+        <div>
+          <p>Congratulations! You completed the typing challenge.</p>
+          <p>Clear time: {clearTime ? `${clearTime.toFixed(2)} seconds` : ''}</p>
+          <button onClick={handleRestart}>One more!</button>
         </div>
+      ) : (
+        <div>
+          <p id="text-to-type">{wordsToTypeRandomized[currentWordIndex]}</p>
+          <input
+            id="input-field"
+            type="text"
+            placeholder="Start typing..."
+            value={enteredText}
+            onChange={handleInput}
+            onFocus={handleFocus}
+          />
         </div>
+      )}
+    </div>
   );
-           
+};
 
-export default Game;
+export default Game2Page;

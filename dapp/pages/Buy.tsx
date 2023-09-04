@@ -1,95 +1,66 @@
-import { NextPage } from "next";
-import { useState } from "react";
-import { useTokenBalance } from "../hooks/useTokenBalance";
-import { useTokenTransfer } from "../hooks/useTokenTransfer";
-import { useAccount } from "wagmi";
-import { Button } from "@chakra-ui/react";
-import { ImCross } from 'react-icons/im';
+import React, { useState } from "react";
+import { externalFunction } from "../hooks/useBuytoken";
 import {
-  Spinner,
-  Flex,
+  Box,
+  FormControl,
+  FormLabel,
   Input,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-} from '@chakra-ui/react'
-import { useMounted } from "../hooks/useMounted";
-import { useLoading } from "../hooks/useLoading";
-import { useError } from "../hooks/useError";
-import { PastTransactions } from "../components/PastTransactions";
-import {
-  Alert,
-  AlertTitle,
-} from '@chakra-ui/react'
-import Link from 'next/link'
+  Button,
+  Container,
+  InputGroup,
+  InputLeftAddon ,
+  InputRightAddon ,
+} from "@chakra-ui/react";
+
 function Buy() {
-  const account = useAccount();
-  const balance = useTokenBalance(account.address as string);
-  const mounted = useMounted();
-  const { isLoading } = useLoading();
-  const { isError, unsetError } = useError();
+    const { BuyToken } = externalFunction();
   const [amount, setAmount] = useState<number>(0);
   const [to, setTo] = useState<string>("");
-
-  const { transferToken } = useTokenTransfer();
+  const handleButtonClick = () => {
+    BuyToken(amount);
+};
 
   const handleTransfer = () => {
-    const from = account.address;
-    transferToken(account.address as string, from as string, to, amount * 10 ** 18);
+    // ここでフォームの送信を処理するコードを追加する
+    console.log("送金が実行されました");
+    console.log("金額: ", amount);
   };
 
-  const handleAmountChange = (valueAsString: string, valueAsNumber: number) => {
-    setAmount(valueAsNumber);
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    // 数字以外の文字を削除して数字だけを保持
+    const numericValue = value.replace(/[^0-9.]/g, "");
+    setAmount(parseFloat(numericValue)); // 数値に変換
   };
 
   const handleToChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTo(event.target.value);
   };
 
-  const closeAlert = () => {
-    unsetError();
-  };
+  return (
+    <Container maxW="md">
+        
 
-  if (mounted) {
-    return (
-      <div>
-        {isLoading && (
-          <Alert status='error'>
-            <Spinner style={{ marginRight: "10px" }} />
-            <AlertTitle>Pending now</AlertTitle>
-          </Alert>
-        )}
-
-        {isError && (
-          <Alert status='error'>
-            <AlertTitle>Reject</AlertTitle>
-            <Button onClick={closeAlert}><ImCross size={12} /></Button>
-          </Alert>
-        )}
-        <div>アカウント: {account.address}</div>
-        <div>残高: {balance}</div>
-        <div>購入</div>
-        <Flex>
-          {/* <Input placeholder='to' className="walletaddress" onChange={handleToChange} /> */}
-          <NumberInput value={amount} min={0} max={1000} onChange={handleAmountChange}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>Eth
-
-          
-          <Button onClick={handleTransfer}>送金</Button>
-        </Flex>
-        <PastTransactions />
-
-      </div>
-    );
-  }
-  return <div>loading...</div>
-};
+        <FormControl isRequired mt={4}>
+        <InputGroup size='sm'>
+          <FormLabel>金額</FormLabel>
+          <Input
+            type="number" 
+            value={amount}
+            onChange={handleAmountChange} 
+            placeholder="金額" 
+          />     
+          <InputRightAddon children='Eth' />   
+          </InputGroup>                     
+        </FormControl>
+        <Box mt={4}>
+          <Button type="submit" colorScheme="blue"onClick={handleButtonClick}>
+            送金
+        </Button>
+        </Box>
+      
+    </Container> 
+  );
+}
 
 export default Buy;

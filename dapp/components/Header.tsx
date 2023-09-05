@@ -96,6 +96,17 @@ export default function Header() {
                 }}
                 href={"/game"}>
                 game
+              </Box><Box
+                as="a"
+                px={2}
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: useColorModeValue('gray.200', 'gray.700'),
+                }}
+                href={"/Buy"}>
+                buy
               </Box>
             </HStack>
           </HStack>
@@ -143,7 +154,18 @@ export default function Header() {
                 href={"/game"}>
                 game
               </Box>
-
+              <Box
+                as="a"
+                px={2}
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: useColorModeValue('gray.200', 'gray.700'),
+                }}
+                href={"/Buy"}>
+                buy
+              </Box>
             </Stack>
           </Box>
         ) : null}

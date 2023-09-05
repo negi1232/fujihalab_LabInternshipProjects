@@ -70,7 +70,9 @@ const IndexPage: NextPage = () => {
           </Alert>
         )}
         <div>アカウント: {account.address}</div>
+        
         <div>残金: {balance}</div>
+
         <div>送金</div>
         <Flex>
           <Input placeholder='to' className="walletaddress" onChange={handleToChange} />

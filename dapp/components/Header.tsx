@@ -108,6 +108,18 @@ export default function Header() {
                 href={"/Buy"}>
                 buy
               </Box>
+              <Box
+                as="a"
+                px={2}
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: useColorModeValue('gray.200', 'gray.700'),
+                }}
+                href={"/game2"}>
+                game2
+              </Box>
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
@@ -170,7 +182,6 @@ export default function Header() {
           </Box>
         ) : null}
       </Box>
-
       <Box p={4}>Main Content Here</Box>
     </>
   )
